@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { getTalkerData } = require('./controllers/talker');
+const { getTalkerById } = require('./controllers/talkerbyid');
+const { errorHandler } = require('./middlewares/error');
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,11 +16,8 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', getTalkerData);
-
-// middleware de erro
-app.use((err, req, res, _next) => { 
-  res.status(500).json({ message: err.message });
-});
+app.get('/talker/:id', getTalkerById);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log('Online!');
