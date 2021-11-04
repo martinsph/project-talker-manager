@@ -4,13 +4,16 @@ const { getTalkerById } = require('./controllers/talkerbyid');
 const { errorHandler } = require('./middlewares/error');
 const { postTalkerData } = require('./controllers/createtalker');
 const { tokenNumber } = require('./controllers/login');
+const { putTalkerData } = require('./controllers/updatetalker');
 const { 
   isValidToken, 
   isValidEmail, 
   isValidPassWord, 
   isValidName, 
   isValidAge, 
-  isValidTalk, 
+  isValidTalk,
+  isValidWatched,
+  isValidRate, 
  } = require('./middlewares/auth');
 
 const app = express();
@@ -27,7 +30,10 @@ app.get('/', (_request, response) => {
 app.get('/talker', getTalkerData);
 app.get('/talker/:id', getTalkerById);
 app.post('/login', isValidEmail, isValidPassWord, tokenNumber);
-app.post('/talker', isValidToken, isValidName, isValidAge, isValidTalk, postTalkerData);
+app.post('/talker', 
+isValidToken, isValidName, isValidAge, isValidTalk, isValidWatched, isValidRate, postTalkerData);
+app.put('/talker/:id', 
+isValidToken, isValidName, isValidAge, isValidTalk, isValidWatched, isValidRate, putTalkerData);
 
 app.use(errorHandler);
 

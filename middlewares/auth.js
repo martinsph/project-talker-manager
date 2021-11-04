@@ -1,10 +1,11 @@
 const isValidToken = (req, res, next) => {
   const { authorization } = req.headers;
+  // console.log('testando', authorization);
   if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
 
-  if (authorization.lenght !== 16) {
+  if (authorization.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
   return next();
@@ -51,32 +52,40 @@ const isValidAge = (req, res, next) => {
   next();
 };
 
-const regexTalk = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
-
 const isValidTalk = (req, res, next) => {
   const { talk } = req.body;
-  const { talk: { watchedAt, rate } } = req.body;
-  if (talk === undefined) {
+  if (!talk) {
     return res.status(400).json({ message: 
       'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
+
+  const { talk: { watchedAt, rate } } = req.body;
+  if (watchedAt === undefined || rate === undefined) {
+    return res.status(400).json({ message: 
+      'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+
+  next();
+};
+  
+const isValidWatched = (req, res, next) => {
+  const regexTalk = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+  const { talk } = req.body;
+  const { watchedAt } = talk;
   if (!regexTalk.test(watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
-  if (rate < 1 || rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
 
-// const isValidRate = (req, res, next) => {
-//   const { talk } = req.body;
-//   const { rate } = talk;
-//   if (rate < 1 || rate > 5) {
-//     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-//   }
-//   next();
-// };
+const isValidRate = (req, res, next) => {
+  const { talk } = req.body;
+  const { rate } = talk;
+  if (parseInt(rate, 10) < 1 || parseInt(rate, 10) > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  next();
+};
 
 module.exports = { 
   isValidToken, 
@@ -84,5 +93,7 @@ module.exports = {
   isValidPassWord, 
   isValidName, 
   isValidAge, 
-  isValidTalk, 
+  isValidTalk,
+  isValidWatched,
+  isValidRate,
 };
