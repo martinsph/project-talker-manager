@@ -11,7 +11,6 @@ const {
   isValidName, 
   isValidAge, 
   isValidTalk, 
-  checktalk,
  } = require('./middlewares/auth');
 
 const app = express();
@@ -28,7 +27,7 @@ app.get('/', (_request, response) => {
 app.get('/talker', getTalkerData);
 app.get('/talker/:id', getTalkerById);
 app.post('/login', isValidEmail, isValidPassWord, tokenNumber);
-app.post('/talker', isValidToken, isValidName, isValidAge, isValidTalk, checktalk, postTalkerData);
+app.post('/talker', isValidToken, isValidName, isValidAge, isValidTalk, postTalkerData);
 
 app.use(errorHandler);
 

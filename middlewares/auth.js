@@ -51,21 +51,16 @@ const isValidAge = (req, res, next) => {
   next();
 };
 
+const regexTalk = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+
 const isValidTalk = (req, res, next) => {
   const { talk } = req.body;
-  const { watchedAt, rate } = talk;
-  if (!talk || !watchedAt || !rate) {
+  const { talk: { watchedAt, rate } } = req.body;
+  if (talk === undefined) {
     return res.status(400).json({ message: 
       'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  next();
-};
-
-const checktalk = (req, res, next) => {
-  const { talk } = req.body;
-  const { watchedAt, rate } = talk;
-  const regex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
-  if (!regex.test(watchedAt)) {
+  if (!regexTalk.test(watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
   if (rate < 1 || rate > 5) {
@@ -90,5 +85,4 @@ module.exports = {
   isValidName, 
   isValidAge, 
   isValidTalk, 
-  checktalk,
 };
