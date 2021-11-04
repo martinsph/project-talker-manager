@@ -5,6 +5,7 @@ const { errorHandler } = require('./middlewares/error');
 const { postTalkerData } = require('./controllers/createtalker');
 const { tokenNumber } = require('./controllers/login');
 const { putTalkerData } = require('./controllers/updatetalker');
+const { deleteTalker } = require('./controllers/deleteTalker');
 const { 
   isValidToken, 
   isValidEmail, 
@@ -34,6 +35,7 @@ app.post('/talker',
 isValidToken, isValidName, isValidAge, isValidTalk, isValidWatched, isValidRate, postTalkerData);
 app.put('/talker/:id', 
 isValidToken, isValidName, isValidAge, isValidTalk, isValidWatched, isValidRate, putTalkerData);
+app.delete('/talker/:id', isValidToken, deleteTalker);
 
 app.use(errorHandler);
 
